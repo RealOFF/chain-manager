@@ -3,7 +3,7 @@ import { exec } from 'node:child_process'
 import fs from 'node:fs'
 import fetch from 'node-fetch'
 import createFastify from 'fastify'
-import { ORDINALS_SECRET } from './env'
+import { ORDINALS_SECRET } from './env.js'
 
 const app = createFastify({ logger: true })
 
@@ -137,6 +137,22 @@ app.route({
       console.error(err)
       return reply.code(500).send({ result: 'Error' })
     }
+  },
+})
+
+app.route({
+  method: 'GET',
+  url: '/',
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        result: { type: 'string' },
+      },
+    },
+  },
+  handler: async () => {
+    return { result: "Hello, it's chain manager!" }
   },
 })
 
