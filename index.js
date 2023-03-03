@@ -54,13 +54,15 @@ const execPromise = (command) =>
 
 const execComand = async ({ filePath, feeRate, address }) => {
   try {
-    const result0 = await execPromise(
+    const inscribeResult = await execPromise(
       `~/bin/ord --wallet ilyaFriends wallet inscribe --fee-rate ${feeRate} ${filePath}`
     )
-    const result1 = await execPromise(
+    const sendResult = await execPromise(
       `~/bin/ord --wallet ilyaFriends wallet send --fee-rate ${feeRate} ${address}`
     )
-    console.log('results chain', result0, result1)
+    console.log('results chain', inscribeResult, sendResult)
+
+    return { inscribeResult, sendResult }
   } catch (err) {
     console.error('Comand error', err)
   }
@@ -125,12 +127,12 @@ app.route({
       const extension = request.body.fileUrl.split('.').at(-1)
       const filePath = `./image-folder/${crypto.randomUUID()}.${extension}`
       await download(request.body.fileUrl, filePath)
-      await execComand({
+      const result = await execComand({
         filePath,
         feeRate: request.body.feeRate,
         address: request.body.address,
       })
-      return reply.code(200).send({ result: 'OK' })
+      return reply.code(200).send({ result })
     } catch (err) {
       console.error(err)
       return reply.code(500).send({ result: 'Error' })
