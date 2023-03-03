@@ -3,6 +3,7 @@ import { exec } from 'node:child_process'
 import fs from 'node:fs'
 import fetch from 'node-fetch'
 import createFastify from 'fastify'
+import { ORDINALS_SECRET } from './env'
 
 const app = createFastify({ logger: true })
 
